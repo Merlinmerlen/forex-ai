@@ -25,7 +25,10 @@ def get_candles(symbol, interval="1h", outputsize=50):
     r = requests.get("https://api.twelvedata.com/time_series",
         params={"symbol": symbol, "interval": interval,
                 "outputsize": outputsize, "apikey": TWELVE_DATA_KEY}, timeout=10)
-    return r.json().get("values", [])
+data = r.json()
+if "values" not in data:
+    print(f"Twelve Data Error: {data}")
+return data.get("values", [])
 
 def calc_rsi(candles, period=14):
     closes = [float(c["close"]) for c in candles]
